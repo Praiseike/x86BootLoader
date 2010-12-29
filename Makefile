@@ -12,7 +12,6 @@ boot_loader.o : boot/boot_loader.s
 	as boot/boot_loader.s -o boot_loader.o -I boot
 
 clean:
-	rm kernel.img
 	rm boot/*.bin
 	rm *.o
 	

@@ -14,7 +14,7 @@
 
 //
 //  For calculating cell postion in memory
-int get_screen_offset(int row,int col)
+int get_screen_offset(char row,char col)
 {
     int offset = (row * 80 + col)*2;
     return offset;
@@ -43,7 +43,7 @@ void set_cursor(int offset)
     
 }
 		
-void print_char(char ch,int row,int col,unsigned char attrib)
+void print_char(char ch,char row,char col,unsigned char attrib)
 {
 
     unsigned char * video = (unsigned char *)VIDEO_MEMORY;      
@@ -77,9 +77,9 @@ void print_char(char ch,int row,int col,unsigned char attrib)
 }
 
 
-void print(char * message,int x,int y)
+void print(char * message,char row,char col)
 {
-    int offset = get_screen_offset(x,y);    // Get current cell position in memory
+    int offset = get_screen_offset(row,col);    // Get current cell position in memory
     char * video = (char *)VIDEO_MEMORY + offset;   // add the cell offset to the start of the vga memory
     int i= 0;
 
@@ -99,8 +99,8 @@ void print(char * message,int x,int y)
 
 void clear_screen()
 {
-    int row = 0;
-    int col = 0;
+    char row = 0;
+    char col = 0;
 
     for(row = 0;row<MAX_ROWS;row++)
     {
