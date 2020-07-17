@@ -1,12 +1,32 @@
 #!/usr/bin/python
 from os import system as execute
-import sys
+import sys,os
+import subprocess
 
-usebochs = None 
+emulator = None
+
+
+def check_bochs():
+    ret = subprocess.call(['which','bochs'])
+    if(ret == 0):
+        print("[check: bochs installed? OK]")
+    else:
+        print ("Sorry you don't have bochs installed")
+        print ("you can install bochs using: apt-get install bochs")
+        quit()
+
+def check_qemu():
+    ret = subprocess.call(['which','qemu-system-x86_64'])
+    if(ret != 0):
+        print("Qemu not installed")
+        print("Install qemu using: apt-get install qemu")
+        exit()
+
+       
 
 def write_config(filename):
     with open(".bochsrc","w") as file:
-        data = 'floppya: 1_44="%s.bin", status=inserted\nboot:a'%filename
+        data = 'floppya: 1_44="%s.bin", status=inserted\nboot:a\nlog:bochslog.txt'%filename
         file.write(data)
 
 
@@ -19,10 +39,12 @@ def run(args):
     execute(exec1)
     execute(exec2)
     
-    if(usebochs == True):
+    if(emulator == "bochs"):
+        check_bochs()
         write_config(name)
-        execute("bochs")
+        execute("bochs -q")
     else:
+        check_qemu()
         execute(exec3)
 
 
@@ -33,9 +55,9 @@ if (len(args) < 2):
 else:
     if(len(args) >= 3):
         if("--bochs" in args):
-            usebochs = True
+            emulator = "bochs"
         else:
-            usebochs = False
+            emuator = "qemu"
     else:
         pass
     run(args)

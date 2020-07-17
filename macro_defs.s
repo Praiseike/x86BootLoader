@@ -1,5 +1,13 @@
+.macro ReadDisk
+ReadDisk:
+
+		mov bx,0x9000       # Buffer memory
+ 		mov dh,2            # No sectors to read
+		call readSectors 
+.endm
 
 .macro SetupGDT
+
 SetupGDT:
 	# points to es:di to right memory section
 
