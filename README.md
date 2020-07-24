@@ -1,8 +1,8 @@
 # x86BootLoader
 
 Install bochs or qemu and the GNU assembler (as or gas)
-Install python
-Run the run.py file by typing 
+Install python and
+run the run.py file by typing 
 
 ```
 python run.py --bochs
