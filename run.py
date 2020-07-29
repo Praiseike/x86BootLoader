@@ -26,26 +26,25 @@ def check_qemu():
 
 def write_config(filename):
     with open(".bochsrc","w") as file:
-        data = 'floppya: 1_44="%s.bin", status=inserted\nboot:a\nlog:bochslog.txt'%filename
+        data = 'floppya: 1_44="kernel.img", status=inserted\nboot:a'#%filename
         file.write(data)
 
 
 def run(args):
     filename = args[1]
     name = filename.split('.')[0]
-    exec1 = "as -o %s.o %s"%(name,filename)
-    exec2 = "ld -o %s.bin --oformat binary -Ttext 0x7c00 %s.o"%(name,name)
-    exec3 = "qemu-system-x86_64 %s.bin"%name
-    execute(exec1)
-    execute(exec2)
+    exec_ext0 = "make"
+    exec_ext3 = "qemu-system-x86_64 kernel.img"#%name
     
+
+    execute(exec_ext0)
     if(emulator == "bochs"):
         check_bochs()
         write_config(name)
-        execute("bochs -q")
+        execute("bochs")
     else:
         check_qemu()
-        execute(exec3)
+        execute(exec_ext3)
 
 
 args = sys.argv
