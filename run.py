@@ -24,23 +24,21 @@ def check_qemu():
 
        
 
-def write_config(filename):
+def write_config():
     with open(".bochsrc","w") as file:
-        data = 'floppya: 1_44="kernel.img", status=inserted\nboot:a'#%filename
+        data = 'floppya: 1_44="kernel.img", status=inserted\nboot:a'
         file.write(data)
 
 
-def run(args):
-    filename = args[1]
-    name = filename.split('.')[0]
+def run_build():
     exec_ext0 = "make"
-    exec_ext3 = "qemu-system-x86_64 kernel.img"#%name
+    exec_ext3 = "qemu-system-x86_64 kernel.img"
     
 
     execute(exec_ext0)
     if(emulator == "bochs"):
         check_bochs()
-        write_config(name)
+        write_config()
         execute("bochs")
     else:
         check_qemu()
@@ -49,17 +47,14 @@ def run(args):
 
 args = sys.argv
 
-if (len(args) < 2):
-    print("Usage: ./run filename")
-else:
-    if(len(args) >= 3):
-        if("--bochs" in args):
-            emulator = "bochs"
-        else:
-            emuator = "qemu"
+
+if(len(args) > 1):
+    if("--bochs" in args):
+        emulator = "bochs"
     else:
-        pass
-    run(args)
+        emuator = "qemu"
+else:
+    pass
 
-   
 
+run_build()
