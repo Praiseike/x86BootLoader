@@ -11,8 +11,8 @@ SetupGDT:
 	# points to es:di to right memory section
 
 	mov ax,0
-	mov es,ax
-	mov di,0x800
+	mov es,ax           # set es to 0
+	mov di,0x800        # start of gdt in memory
 
 	# NULL Descriptor
 	mov cx,4    # write the null descriptor
@@ -73,7 +73,7 @@ LoadDescriptorTables:
 SwitchToPm:
         cli
         mov eax,cr0
-	or eax,0x1
+	or eax,0x1              # Setting the PE bit of the cr0 control register to 1
 	mov cr0,eax
 
 .endm	
@@ -82,20 +82,20 @@ SwitchToPm:
 .macro PerformFarJump
 		jmp 0x8:ClearPipeline 
                 nop
-		nop
+		nop                 # attempting to clear processor pipeline
 		nop
 
 .code32
 
 ClearPipeline:
-    mov eax,0xabc 
+    mov eax,0xabc           # just doing somthing [ not important ]
 .endm
 
 .macro SetupSegments
 	mov ax,0x10
 	mov es,ax
 	mov ds,ax
-	mov es,ax
+	mov es,ax       # Setting up segment register to fit the new life
 	mov gs,ax
 	mov fs,ax
 	mov ss,ax

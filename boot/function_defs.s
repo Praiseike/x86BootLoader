@@ -1,15 +1,18 @@
-.func PrintString
+.func PrintString                       # receives a pointer to string from si
     PrintString:
-        lodsb
+        lodsb                           # move [si] into al and increment si
         mov ah,0x0e
-        mov bx,9
-        or al,al
-        jz .PrintString_done
-        int 0x10
-        jmp PrintString
+        mov bx,9                        # other settings :)
+        or al,al                        # check for 0
+        jz .PrintString_done            # stop looping if 0
+        int 0x10                        # bios interupt to print 
+                                        
+        jmp PrintString                 # loop back
     .PrintString_done:
         retw
 .endfunc
+
+
 
 .func readSectors
     readSectors:
@@ -23,10 +26,10 @@
             mov dl,[BOOT_DRIVE] 
             int 0x13
 
-            jc disk_error
+            jc disk_error       # print error on carry
             pop dx
             cmp dh,al
-            jne disk_error
+            jne disk_error      # print error if read count not equal to number specified in dh
             lea si,SUCCESS_MSG
             call PrintString
 	    ret

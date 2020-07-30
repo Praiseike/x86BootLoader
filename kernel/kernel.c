@@ -4,7 +4,7 @@ void kmain()
 {
     char message[] = "Welcome to protected mode";
     clear_screen();
-    print(message);  
+    print(message,10,10);  
     
 }
 

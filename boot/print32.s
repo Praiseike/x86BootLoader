@@ -1,9 +1,11 @@
+# This is kind of useless now
+
 
 .func print_string32
 .code32
 print_string32:
 	pusha
-	mov edx,0xb8000
+	mov edx,0xb8000     
 
 print_string32_loop:
         lodsb

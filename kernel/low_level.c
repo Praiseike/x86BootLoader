@@ -1,6 +1,7 @@
 unsigned char port_byte_in(unsigned short port)
 {
     unsigned char result;
+    // Reading data from I/O port
     // edx = port
     // eax = result
     //
@@ -10,6 +11,7 @@ unsigned char port_byte_in(unsigned short port)
 
 void port_byte_out(unsigned short port,unsigned char data)
 {
+    // Writing data to I/O port
     // eax = data
     // edx = port
     __asm__("out %%al,%%dx;" : : "a" (data) , "d" (port));

@@ -12,7 +12,8 @@
 #define REG_SCREEN_CTRL 0x3D4
 #define REG_SCREEN_DATA 0x3D5
 
-
+//
+//  For calculating cell postion in memory
 int get_screen_offset(int row,int col)
 {
     int offset = (row * 80 + col)*2;
@@ -25,9 +26,9 @@ int get_cursor(void)
     // reg 15: low byte of cursor offset
     unsigned short offset = 0;
     port_byte_out(REG_SCREEN_CTRL,0x0f);
-    offset |= port_byte_in(REG_SCREEN_DATA);
+    offset |= port_byte_in(REG_SCREEN_DATA);    // write higher 4 bits to I/O port
     port_byte_out(REG_SCREEN_CTRL,0x0e);
-    offset |= (port_byte_in(REG_SCREEN_DATA) << 8);
+    offset |= (port_byte_in(REG_SCREEN_DATA) << 8); // write lower 4 bits to I/O port
     return offset*2;    // no chars * 2 = cell offset
 }
 
@@ -35,17 +36,17 @@ void set_cursor(int offset)
 {
     offset /= 2;    // convert from cell to char offset
     // write bytes to internal device registers
-    port_byte_out(REG_SCREEN_CTRL,15);
-    port_byte_out(REG_SCREEN_DATA,(unsigned char)(offset & 0xff));
+    port_byte_out(REG_SCREEN_CTRL,15);      
+    port_byte_out(REG_SCREEN_DATA,(unsigned char)(offset & 0xff));  // read higher 4 bits
     port_byte_out(REG_SCREEN_CTRL,14);
-    port_byte_out(REG_SCREEN_DATA,(unsigned char)((offset >> 8) & 0xff));
+    port_byte_out(REG_SCREEN_DATA,(unsigned char)((offset >> 8) & 0xff));   // read lower 4 bits
     
 }
 		
 void print_char(char ch,int row,int col,unsigned char attrib)
 {
 
-    unsigned char * video = (unsigned char *)VIDEO_MEMORY;
+    unsigned char * video = (unsigned char *)VIDEO_MEMORY;      
 
     int offset;
     // if row and col are not -ve
@@ -57,7 +58,8 @@ void print_char(char ch,int row,int col,unsigned char attrib)
     {
         offset = get_cursor();
     }
-
+    
+    // check for new line
     if(ch == '\n')
     {
         int rows = offset/(2*MAX_COLS);
@@ -68,40 +70,32 @@ void print_char(char ch,int row,int col,unsigned char attrib)
         video[offset] = ch;
         video[offset+1] = attrib;
     }
-
+    
+    //set next position
     offset += 2;
     set_cursor(offset);
 }
 
-void print_at(char * message,int row,int col)
-{
 
-    char * video = (char *)VIDEO_MEMORY;
-    if(col >= 0 && row >= 0)
-    {
-        set_cursor(get_screen_offset(row,col));
-    }
-    int i = 0;
-    int len = 7;//strlen(message);
-    int offset = get_screen_offset(row,col);
-    while(i < len);
-    {
-        video[offset+i] = '*';
-        video[offset+i+1] = 0xa7;
-        i++;
-    }
-}
-
-void print(char * message)
+void print(char * message,int x,int y)
 {
-    char * video = (char *)VIDEO_MEMORY;
-    int j = 0,i= 0;
+    int offset = get_screen_offset(x,y);    // Get current cell position in memory
+    char * video = (char *)VIDEO_MEMORY + offset;   // add the cell offset to the start of the vga memory
+    int i= 0;
+
     while(*message != 0)
     {
         *video++ = *message++;
         *video++ = 0x07;
+        i++;
     }
+
+    
+    set_cursor(offset+(2*i));       // place the cursor at the end of the written text
+    
 }
+
+// Cleas the screen by using the print_char abstraction
 
 void clear_screen()
 {
@@ -119,6 +113,8 @@ void clear_screen()
     set_cursor(get_screen_offset(0,0));
 }
 
+
+//  Clears the screen by directly set all chars to ' ' from 0xb8000 to 0xb8fa0
 void force_clear_screen()
 {
     char * video = (char *)VIDEO_MEMORY;
@@ -130,5 +126,5 @@ void force_clear_screen()
         video[i+1] = 0x07;
         i+=2;
     }
-    set_cursor(get_screen_offset(0,0));
+    set_cursor(get_screen_offset(0,0)); // Reset the cursor to the first row and column
 }
