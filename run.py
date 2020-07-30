@@ -34,7 +34,7 @@ def run_build():
     exec_ext0 = "make"
     exec_ext3 = "qemu-system-x86_64 kernel.img"
     
-
+    execute('make clean')
     execute(exec_ext0)
     if(emulator == "bochs"):
         check_bochs()
@@ -43,7 +43,7 @@ def run_build():
     else:
         check_qemu()
         execute(exec_ext3)
-
+    execute("make clean");
 
 args = sys.argv
 

@@ -1,5 +1,6 @@
 #include "../kernel/low_level.c"
 #include "../kernel/mem.c"
+
 #define VIDEO_MEMORY 0xb8000
 #define MAX_ROWS 25
 #define MAX_COLS 80
@@ -10,9 +11,11 @@
 // I/O PORTS
 #define REG_SCREEN_CTRL 0x3D4
 #define REG_SCREEN_DATA 0x3D5
+
+
 int get_screen_offset(int row,int col)
 {
-    int offset = ((row * 80) + col)*2;
+    int offset = (row * 80 + col)*2;
     return offset;
 }
 
@@ -20,7 +23,7 @@ int get_cursor(void)
 {
     // reg 14: high byte of cursor offset
     // reg 15: low byte of cursor offset
-	unsigned short offset = 0;
+    unsigned short offset = 0;
     port_byte_out(REG_SCREEN_CTRL,0x0f);
     offset |= port_byte_in(REG_SCREEN_DATA);
     port_byte_out(REG_SCREEN_CTRL,0x0e);
@@ -37,23 +40,6 @@ void set_cursor(int offset)
     port_byte_out(REG_SCREEN_CTRL,14);
     port_byte_out(REG_SCREEN_DATA,(unsigned char)((offset >> 8) & 0xff));
     
-}
-
-int handle_scrolling(int offset)
-{
-	int x = offset % MAX_COLS;
-	int y = offset / MAX_COLS;
-	if (x == MAX_COLS -1)
-	{
-		x = 0;
-		y++;
-	}
-	else
-	{
-		x++;
-	}
-	return get_screen_offset(x,y);
-
 }
 		
 void print_char(char ch,int row,int col,unsigned char attrib)
@@ -84,23 +70,37 @@ void print_char(char ch,int row,int col,unsigned char attrib)
     }
 
     offset += 2;
-    offset = handle_scrolling(offset);
     set_cursor(offset);
 }
 
 void print_at(char * message,int row,int col)
 {
+
+    char * video = (char *)VIDEO_MEMORY;
     if(col >= 0 && row >= 0)
     {
         set_cursor(get_screen_offset(row,col));
-
     }
     int i = 0;
+    int len = 7;//strlen(message);
+    int offset = get_screen_offset(row,col);
+    while(i < len);
+    {
+        video[offset+i] = '*';
+        video[offset+i+1] = 0xa7;
+        i++;
+    }
 }
 
 void print(char * message)
 {
-    print_at(message,-1,-1);
+    char * video = (char *)VIDEO_MEMORY;
+    int j = 0,i= 0;
+    while(*message != 0)
+    {
+        *video++ = *message++;
+        *video++ = 0x07;
+    }
 }
 
 void clear_screen()
@@ -130,4 +130,5 @@ void force_clear_screen()
         video[i+1] = 0x07;
         i+=2;
     }
+    set_cursor(get_screen_offset(0,0));
 }
