@@ -1,7 +1,7 @@
 .macro ReadDisk
 ReadDisk:
 	mov bx,0x9000      # Buffer memory
- 	mov dh,2            # Number of sectors to read
+ 	mov dh,15          # Number of sectors to read = 15
 	call readSectors 
 .endm
 

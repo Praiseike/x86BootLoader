@@ -55,12 +55,5 @@ if(len(args) > 1):
         emuator = "qemu"
 else:
     pass
-<<<<<<< HEAD
-
-
-run_build()
-=======
->>>>>>> d626229858ea908437e537e3a98884ae4cf04a3b
-
 
 run_build()

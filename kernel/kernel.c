@@ -1,11 +1,8 @@
+#include "../drivers/screen.h"
+
 void kmain()
 {
-    char * video =(char *) 0xb8000;
-    int i;
-    for (i = 0;i < 4000;i+=2)
-    {
-        video[i] = '*';
-        video[i+1] = 0x0a;
-    }
-    
+    char * message = "Welcome to protected mode";
+    clear_screen();
+    print_char(*(message+2),1,1,0x07);
 }
