@@ -1,3 +1,5 @@
+// Author: Praise Ike
+// Email: Praiseike123@gmail.com
 
 
 void * memcopy(char * dest,char * source,int count)

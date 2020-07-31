@@ -1,3 +1,7 @@
+# Author: Praise Ike
+# Email: Praiseike123@gmail.com
+
+
 .macro ReadDisk
 ReadDisk:
 	mov bx,0x9000      # Buffer memory

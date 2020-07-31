@@ -1,3 +1,6 @@
+// Author: Praise Ike
+// Email: Praiseike123@gmail.com
+
 #include "../drivers/screen.h"
 #define GREEN_ON_BLACK 0xa0
 

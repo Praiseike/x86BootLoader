@@ -1,4 +1,9 @@
 #!/usr/bin/python
+
+# Author: Praise Ike
+# Email: Praiseike123@gmai.com
+
+
 from os import system as execute
 import sys,os
 import subprocess

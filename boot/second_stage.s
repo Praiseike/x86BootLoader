@@ -1,3 +1,8 @@
+# Author: Praise Ike
+# Email: Praiseike123@gmail.com
+
+
+
 .code32
 .extern kmain
 

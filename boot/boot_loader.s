@@ -1,3 +1,6 @@
+# Author: Praise Ike
+# Email: Praiseike123@gmail.com
+
 .code16
 .intel_syntax noprefix
 

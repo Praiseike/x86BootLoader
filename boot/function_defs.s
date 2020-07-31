@@ -1,3 +1,7 @@
+# Author: Praise Ike
+# Email: Praiseike123@gmail.com
+
+
 .func PrintString                       # receives a pointer to string from si
     PrintString:
         lodsb                           # move [si] into al and increment si
