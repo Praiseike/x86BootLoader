@@ -1,3 +1,6 @@
+# Author: Praise Ike
+# Email: Praiseike123@gmail.com
+
 kernel.img: boot_loader.bin
 	dd if=/dev/zero of=kernel.img count=16 bs=512
 	dd if=boot/boot_loader.bin of=kernel.img conv=notrunc
